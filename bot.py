@@ -2,7 +2,11 @@ import discord
 from discord.ext.commands import Bot
 import os
 import asyncio
+from dotenv import load_dotenv
 import json
+
+load_dotenv()
+bot_token = os.getenv("BOT_TOKEN")
 
 # Initialize bot
 intents = discord.Intents.all()
@@ -13,9 +17,9 @@ with open("config.json", "r") as file:
     bot.config = json.load(file)
 
 
-bot.token = bot.config["required"]["TOKEN"]
 bot.endpoint = bot.config["required"]["ENDPOINT"].split("/api")[0]
 bot.channels = [int(x) for x in bot.config["required"]["CHANNELS"].split(",")]
+bot.stop = bot.config["extras"]["STOP"]
 
 
 # Load cogs
@@ -32,4 +36,4 @@ async def load_cogs() -> None:
 
 
 asyncio.run(load_cogs())
-bot.run(bot.token)
+bot.run(bot_token)
